@@ -108,10 +108,42 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public Mono<ClienteDetailResponse> obtenerPorId(String id) {
+    public Mono<ClienteDetailResponse> obtenerPorId(String id, TraceContext traceContext) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new ClienteNotFoundException("Cliente no encontrado: " + id)))
-                .map(this::toDetailResponse);
+                .flatMap(cliente -> {
+                    ClienteDetailResponse response = toDetailResponse(cliente);
+                    return tracePayloadFactory.buildJson(
+                                    traceContext,
+                                    cliente.id(),
+                                    "GET_BY_ID",
+                                    response,
+                                    "0000",
+                                    transactionCodeProvider.codigoConsultaCliente()
+                            )
+                            .flatMap(tracePublisher::publish)
+                            .thenReturn(response);
+                });
+    }
+
+    @Override
+    public Mono<Void> eliminar(String id, TraceContext traceContext) {
+        return repository.findById(id)
+                .switchIfEmpty(Mono.error(new ClienteNotFoundException("Cliente no encontrado: " + id)))
+                .flatMap(actual -> {
+                    Cliente inactivo = actual.withActivo(false);
+                    return repository.save(inactivo)
+                            .flatMap(saved -> tracePayloadFactory.buildJson(
+                                            traceContext,
+                                            saved.id(),
+                                            "DELETE",
+                                            toDetailResponse(saved),
+                                            "0000",
+                                            transactionCodeProvider.codigoEliminacionCliente()
+                                    )
+                                    .flatMap(tracePublisher::publish)
+                            );
+                });
     }
 
     private ClienteDetailResponse toDetailResponse(Cliente cliente) {

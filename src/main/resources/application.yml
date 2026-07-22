@@ -17,4 +17,7 @@ spring:
 
 app:
   region: este2
+  eventhub:
+    connection-string: ${EVENTHUB_CONNECTION_STRING:}
+    name: ${EVENTHUB_NAME:clientes-trace}
 

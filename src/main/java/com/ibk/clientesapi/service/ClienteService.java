@@ -12,7 +12,8 @@ public interface ClienteService {
     Mono<ClienteDetailResponse> crear(ClienteCreateRequest request, TraceContext traceContext);
     Mono<ClienteDetailResponse> actualizar(String id, ClienteUpdateRequest request, TraceContext traceContext);
     Flux<ClienteListItemResponse> listar(TraceContext traceContext);
-    Mono<ClienteDetailResponse> obtenerPorId(String id);
+    Mono<ClienteDetailResponse> obtenerPorId(String id, TraceContext traceContext);
+    Mono<Void> eliminar(String id, TraceContext traceContext);
 }
 
 

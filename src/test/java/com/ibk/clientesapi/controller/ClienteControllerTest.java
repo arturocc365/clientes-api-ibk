@@ -17,8 +17,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
 
-import static org.mockito.ArgumentMatchers.any;
-
 @WebFluxTest(ClienteController.class)
 class ClienteControllerTest {
 
@@ -61,6 +59,20 @@ class ClienteControllerTest {
     }
 
     @Test
+    void debeObtenerClientePorId() {
+        Mockito.when(service.obtenerPorId(Mockito.eq("1"), Mockito.any(TraceContext.class)))
+                .thenReturn(Mono.just(new ClienteDetailResponse("1", "Juan", "Perez", "Lopez", OffsetDateTime.now(), true)));
+
+        webTestClient.get().uri("/clientes/1")
+                .header("consumerId", "SMP")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.id").isEqualTo("1")
+                .jsonPath("$.nombre").isEqualTo("Juan");
+    }
+
+    @Test
     void debeActualizarCliente() {
         Mockito.when(service.actualizar(Mockito.eq("1"), Mockito.any(ClienteUpdateRequest.class), Mockito.any(TraceContext.class))).thenReturn(Mono.just(new ClienteDetailResponse(
                 "1", "Juan", "Perez", "Lopez", OffsetDateTime.now(), false
@@ -74,7 +86,17 @@ class ClienteControllerTest {
                 .expectBody()
                 .jsonPath("$.activo").isEqualTo(false);
     }
-}
 
+    @Test
+    void debeEliminarCliente() {
+        Mockito.when(service.eliminar(Mockito.eq("1"), Mockito.any(TraceContext.class)))
+                .thenReturn(Mono.empty());
+
+        webTestClient.delete().uri("/clientes/1")
+                .header("consumerId", "SMP")
+                .exchange()
+                .expectStatus().isNoContent();
+    }
+}
 
 

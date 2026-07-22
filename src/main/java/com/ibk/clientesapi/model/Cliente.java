@@ -45,6 +45,11 @@ public class Cliente implements Persistable<String> {
         return new Cliente(id, nombre, apellidoPaterno, apellidoMaterno, fechaCreacion, activo, false);
     }
 
+    /** Devuelve una copia de este cliente con el campo activo modificado */
+    public Cliente withActivo(boolean activo) {
+        return existente(this.id, this.nombre, this.apellidoPaterno, this.apellidoMaterno, this.fechaCreacion, activo);
+    }
+
     /** Constructor general */
     public Cliente(String id, String nombre, String apellidoPaterno, String apellidoMaterno,
                    OffsetDateTime fechaCreacion, boolean activo, boolean esNuevo) {
