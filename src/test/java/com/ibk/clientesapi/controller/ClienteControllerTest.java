@@ -39,7 +39,7 @@ class ClienteControllerTest {
                 .header("deviceId", "device-1")
                 .bodyValue(new ClienteCreateRequest("Juan", "Perez", "Lopez", true))
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody()
                 .jsonPath("$.id").isEqualTo("1")
                 .jsonPath("$.nombre").isEqualTo("Juan");

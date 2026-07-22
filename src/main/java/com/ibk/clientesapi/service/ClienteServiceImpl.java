@@ -93,7 +93,7 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Flux<ClienteListItemResponse> listar(TraceContext traceContext) {
-        return repository.findAll()
+        return repository.findByActivoTrue()
                 .map(cliente -> new ClienteListItemResponse(cliente.id(), cliente.nombreCompleto()))
                 .concatMap(response -> tracePayloadFactory.buildJson(
                                 traceContext,

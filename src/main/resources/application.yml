@@ -21,3 +21,9 @@ app:
     connection-string: ${EVENTHUB_CONNECTION_STRING:}
     name: ${EVENTHUB_NAME:clientes-trace}
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+

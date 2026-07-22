@@ -31,6 +31,7 @@ public class ClienteController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Mono<ClienteDetailResponse> crear(
             @RequestHeader("consumerId") String consumerId,
             @RequestHeader(value = "traceparent", required = false) String traceparent,
@@ -49,6 +50,16 @@ public class ClienteController {
         return service.listar(new TraceContext(consumerId, traceparent, deviceType, deviceId));
     }
 
+    @GetMapping("/{id}")
+    public Mono<ClienteDetailResponse> obtenerPorId(
+            @PathVariable String id,
+            @RequestHeader("consumerId") String consumerId,
+            @RequestHeader(value = "traceparent", required = false) String traceparent,
+            @RequestHeader(value = "deviceType", required = false) String deviceType,
+            @RequestHeader(value = "deviceId", required = false) String deviceId) {
+        return service.obtenerPorId(id, new TraceContext(consumerId, traceparent, deviceType, deviceId));
+    }
+
     @PutMapping("/{id}")
     public Mono<ClienteDetailResponse> actualizar(
             @PathVariable String id,
@@ -58,16 +69,6 @@ public class ClienteController {
             @RequestHeader(value = "deviceId", required = false) String deviceId,
             @Valid @RequestBody ClienteUpdateRequest request) {
         return service.actualizar(id, request, new TraceContext(consumerId, traceparent, deviceType, deviceId));
-    }
-
-    @GetMapping("/{id}")
-    public Mono<ClienteDetailResponse> obtenerPorId(
-            @PathVariable String id,
-            @RequestHeader("consumerId") String consumerId,
-            @RequestHeader(value = "traceparent", required = false) String traceparent,
-            @RequestHeader(value = "deviceType", required = false) String deviceType,
-            @RequestHeader(value = "deviceId", required = false) String deviceId) {
-        return service.obtenerPorId(id, new TraceContext(consumerId, traceparent, deviceType, deviceId));
     }
 
     @DeleteMapping("/{id}")
@@ -81,5 +82,3 @@ public class ClienteController {
         return service.eliminar(id, new TraceContext(consumerId, traceparent, deviceType, deviceId));
     }
 }
-
-
