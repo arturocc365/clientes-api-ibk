@@ -8,10 +8,13 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Component
 public class TracePayloadFactory {
+    private static final ZoneId PERU_ZONE = ZoneId.of("America/Lima");
+
     private final ObjectMapper objectMapper;
     private final String region;
 
@@ -27,7 +30,7 @@ public class TracePayloadFactory {
                             context.consumerId(),
                             String.valueOf(System.currentTimeMillis()),
                             context.consumerId(),
-                            OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
+                            OffsetDateTime.now(PERU_ZONE).format(DateTimeFormatter.ISO_OFFSET_DATE_TIME),
                             customerId,
                             region,
                             statusCode,
@@ -52,4 +55,3 @@ public class TracePayloadFactory {
         return parts.length >= 3 ? parts[1] : traceparent;
     }
 }
-

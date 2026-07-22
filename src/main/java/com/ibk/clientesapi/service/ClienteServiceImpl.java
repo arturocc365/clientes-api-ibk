@@ -15,11 +15,14 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
+    private static final ZoneId PERU_ZONE = ZoneId.of("America/Lima");
+
     private final ClienteRepository repository;
     private final TracePublisher tracePublisher;
     private final TracePayloadFactory tracePayloadFactory;
@@ -42,7 +45,7 @@ public class ClienteServiceImpl implements ClienteService {
                 request.nombre(),
                 request.apellidoPaterno(),
                 request.apellidoMaterno(),
-                OffsetDateTime.now(),
+                OffsetDateTime.now(PERU_ZONE),
                 request.activo() == null || request.activo()
         );
 
@@ -136,4 +139,3 @@ public class ClienteServiceImpl implements ClienteService {
         );
     }
 }
-
