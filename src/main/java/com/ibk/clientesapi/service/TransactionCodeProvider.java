@@ -11,5 +11,9 @@ public class TransactionCodeProvider {
     public String codigoRegistroCliente() {
         return "102";
     }
+
+    public String codigoEliminacionCliente() {
+        return "202";
+    }
 }
 
