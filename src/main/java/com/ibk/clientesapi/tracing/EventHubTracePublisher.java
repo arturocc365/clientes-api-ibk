@@ -32,7 +32,7 @@ public class EventHubTracePublisher implements TracePublisher {
                         producer.send(List.of(new EventData(payload)));
                         log.debug("TRACE_EVENT published to EventHub");
                     } catch (Exception e) {
-                        log.warn("Failed to publish TRACE_EVENT to EventHub: {}", e.getMessage());
+                        log.error("Failed to publish TRACE_EVENT to EventHub: {}", e.getMessage(), e);
                     }
                 })
                 .subscribeOn(Schedulers.boundedElastic())

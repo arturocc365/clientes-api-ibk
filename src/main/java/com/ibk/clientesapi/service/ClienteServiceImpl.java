@@ -131,14 +131,7 @@ public class ClienteServiceImpl implements ClienteService {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new ClienteNotFoundException("Cliente no encontrado: " + id)))
                 .flatMap(actual -> {
-                    Cliente inactivo = Cliente.existente(
-                            actual.id(),
-                            actual.nombre(),
-                            actual.apellidoPaterno(),
-                            actual.apellidoMaterno(),
-                            actual.fechaCreacion(),
-                            false
-                    );
+                    Cliente inactivo = actual.withActivo(false);
                     return repository.save(inactivo)
                             .flatMap(saved -> tracePayloadFactory.buildJson(
                                             traceContext,
