@@ -30,9 +30,9 @@ public class ClienteController {
     @PostMapping
     public Mono<ClienteDetailResponse> crear(
             @RequestHeader("consumerId") String consumerId,
-            @RequestHeader(value = "traceparent", required = false) String traceparent,
-            @RequestHeader(value = "deviceType", required = false) String deviceType,
-            @RequestHeader(value = "deviceId", required = false) String deviceId,
+            @RequestHeader("traceparent") String traceparent,
+            @RequestHeader("deviceType") String deviceType,
+            @RequestHeader("deviceId") String deviceId,
             @Valid @RequestBody ClienteCreateRequest request) {
         return service.crear(request, new TraceContext(consumerId, traceparent, deviceType, deviceId));
     }
@@ -40,9 +40,9 @@ public class ClienteController {
     @GetMapping
     public Flux<ClienteListItemResponse> listar(
             @RequestHeader("consumerId") String consumerId,
-            @RequestHeader(value = "traceparent", required = false) String traceparent,
-            @RequestHeader(value = "deviceType", required = false) String deviceType,
-            @RequestHeader(value = "deviceId", required = false) String deviceId) {
+            @RequestHeader("traceparent") String traceparent,
+            @RequestHeader("deviceType") String deviceType,
+            @RequestHeader("deviceId") String deviceId) {
         return service.listar(new TraceContext(consumerId, traceparent, deviceType, deviceId));
     }
 
@@ -50,12 +50,11 @@ public class ClienteController {
     public Mono<ClienteDetailResponse> actualizar(
             @PathVariable String id,
             @RequestHeader("consumerId") String consumerId,
-            @RequestHeader(value = "traceparent", required = false) String traceparent,
-            @RequestHeader(value = "deviceType", required = false) String deviceType,
-            @RequestHeader(value = "deviceId", required = false) String deviceId,
+            @RequestHeader("traceparent") String traceparent,
+            @RequestHeader("deviceType") String deviceType,
+            @RequestHeader("deviceId") String deviceId,
             @Valid @RequestBody ClienteUpdateRequest request) {
         return service.actualizar(id, request, new TraceContext(consumerId, traceparent, deviceType, deviceId));
     }
 }
-
 

@@ -17,4 +17,7 @@ spring:
 
 app:
   region: este2
-
+  eventhub:
+    enabled: ${EVENTHUB_ENABLED:false}
+    connection-string: ${EVENTHUB_CONNECTION_STRING:}
+    name: ${EVENTHUB_NAME:}

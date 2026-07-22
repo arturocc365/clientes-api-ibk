@@ -15,6 +15,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -63,8 +64,18 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public Mono<ClienteDetailResponse> actualizar(String id, ClienteUpdateRequest request, TraceContext traceContext) {
+        String notFoundMessage = "Cliente no encontrado: " + id;
         return repository.findById(id)
-                .switchIfEmpty(Mono.error(new ClienteNotFoundException("Cliente no encontrado: " + id)))
+                .switchIfEmpty(Mono.defer(() -> tracePayloadFactory.buildJson(
+                                        traceContext,
+                                        id,
+                                        request,
+                                        Map.of("message", notFoundMessage),
+                                        "9999",
+                                        transactionCodeProvider.codigoRegistroCliente()
+                                )
+                                .flatMap(tracePublisher::publish)
+                                .then(Mono.error(new ClienteNotFoundException(notFoundMessage)))))
                 .flatMap(actual -> {
                     Cliente updated = Cliente.existente(
                             actual.id(),
@@ -125,5 +136,4 @@ public class ClienteServiceImpl implements ClienteService {
         );
     }
 }
-
 

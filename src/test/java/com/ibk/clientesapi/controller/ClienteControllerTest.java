@@ -53,6 +53,9 @@ class ClienteControllerTest {
 
         webTestClient.get().uri("/clientes")
                 .header("consumerId", "SMP")
+                .header("traceparent", "00-db65adadcc7ab67b6eaa38521c34c42a-c1d2e415b56c412b-01")
+                .header("deviceType", "IOS")
+                .header("deviceId", "device-1")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -68,13 +71,23 @@ class ClienteControllerTest {
 
         webTestClient.put().uri("/clientes/1")
                 .header("consumerId", "SMP")
+                .header("traceparent", "00-db65adadcc7ab67b6eaa38521c34c42a-c1d2e415b56c412b-01")
+                .header("deviceType", "IOS")
+                .header("deviceId", "device-1")
                 .bodyValue(new ClienteUpdateRequest("Juan", "Perez", "Lopez", false))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.activo").isEqualTo(false);
     }
+
+    @Test
+    void debeResponderBadRequestSiFaltanHeadersDeTrazabilidad() {
+        webTestClient.post().uri("/clientes")
+                .header("consumerId", "SMP")
+                .bodyValue(new ClienteCreateRequest("Juan", "Perez", "Lopez", true))
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
 }
-
-
 
