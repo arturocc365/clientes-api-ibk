@@ -43,3 +43,4 @@ En `POST /clientes`, `GET /clientes` y `PUT /clientes/{id}`:
 - La persistencia usa `Spring Data R2DBC` con PostgreSQL.
 - El script de creación de tabla está en `src/main/resources/schema.sql`.
 - La publicación de trazas mantiene log en pod y, con `EVENTHUB_ENABLED=true`, también envía a Event Hub.
+- `fechaCreacion` se serializa en formato ISO-8601 con zona horaria: `yyyy-MM-dd'T'HH:mm:ssXXX`.
