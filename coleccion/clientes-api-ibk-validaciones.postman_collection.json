@@ -1,0 +1,190 @@
+{
+  "info": {
+    "_postman_id": "db447698-7350-4f26-8ecb-c1d5edb9ab60",
+    "name": "clientes-api-ibk - Validaciones y Errores",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "consumerId",
+      "value": "SMP"
+    },
+    {
+      "key": "traceparent",
+      "value": "00-db65adadcc7ab67b6eaa38521c34c42a-c1d2e415b56c412b-01"
+    },
+    {
+      "key": "deviceType",
+      "value": "IOS"
+    },
+    {
+      "key": "deviceId",
+      "value": "299d0e3838e548d1a9566525f94c4be0"
+    }
+  ],
+  "item": [
+    {
+      "name": "POST - Falta headers de trazabilidad (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "consumerId",
+            "value": "{{consumerId}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellidoPaterno\": \"Perez\",\n  \"apellidoMaterno\": \"Lopez\",\n  \"activo\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/clientes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "clientes"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 400\", function () {",
+              "  pm.response.to.have.status(400);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "POST - Nombre vacío (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "consumerId",
+            "value": "{{consumerId}}"
+          },
+          {
+            "key": "traceparent",
+            "value": "{{traceparent}}"
+          },
+          {
+            "key": "deviceType",
+            "value": "{{deviceType}}"
+          },
+          {
+            "key": "deviceId",
+            "value": "{{deviceId}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"\",\n  \"apellidoPaterno\": \"Perez\",\n  \"apellidoMaterno\": \"Lopez\",\n  \"activo\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/clientes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "clientes"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 400\", function () {",
+              "  pm.response.to.have.status(400);",
+              "});",
+              "const body = pm.response.json();",
+              "pm.test(\"Retorna código de validación\", function () {",
+              "  pm.expect(body.code).to.eql(\"4000\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "PUT - Cliente no encontrado (404/9999)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "consumerId",
+            "value": "{{consumerId}}"
+          },
+          {
+            "key": "traceparent",
+            "value": "{{traceparent}}"
+          },
+          {
+            "key": "deviceType",
+            "value": "{{deviceType}}"
+          },
+          {
+            "key": "deviceId",
+            "value": "{{deviceId}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellidoPaterno\": \"Perez\",\n  \"apellidoMaterno\": \"Lopez\",\n  \"activo\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/clientes/cliente-no-existe-404",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "clientes",
+            "cliente-no-existe-404"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 404\", function () {",
+              "  pm.response.to.have.status(404);",
+              "});",
+              "const body = pm.response.json();",
+              "pm.test(\"Retorna código funcional 9999\", function () {",
+              "  pm.expect(body.code).to.eql(\"9999\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,201 @@
+{
+  "info": {
+    "_postman_id": "f4b8f2f6-7a77-4c04-a474-d8bf66d89f11",
+    "name": "clientes-api-ibk - Flujo OK",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "consumerId",
+      "value": "SMP"
+    },
+    {
+      "key": "traceparent",
+      "value": "00-db65adadcc7ab67b6eaa38521c34c42a-c1d2e415b56c412b-01"
+    },
+    {
+      "key": "deviceType",
+      "value": "IOS"
+    },
+    {
+      "key": "deviceId",
+      "value": "299d0e3838e548d1a9566525f94c4be0"
+    },
+    {
+      "key": "clienteId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "POST - Crear cliente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "consumerId",
+            "value": "{{consumerId}}"
+          },
+          {
+            "key": "traceparent",
+            "value": "{{traceparent}}"
+          },
+          {
+            "key": "deviceType",
+            "value": "{{deviceType}}"
+          },
+          {
+            "key": "deviceId",
+            "value": "{{deviceId}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellidoPaterno\": \"Perez\",\n  \"apellidoMaterno\": \"Lopez\",\n  \"activo\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/clientes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "clientes"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set(\"clienteId\", json.id);",
+              "pm.test(\"Guarda clienteId\", function () {",
+              "  pm.expect(json.id).to.be.a(\"string\").and.not.empty;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "GET - Listar clientes",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "consumerId",
+            "value": "{{consumerId}}"
+          },
+          {
+            "key": "traceparent",
+            "value": "{{traceparent}}"
+          },
+          {
+            "key": "deviceType",
+            "value": "{{deviceType}}"
+          },
+          {
+            "key": "deviceId",
+            "value": "{{deviceId}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/clientes",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "clientes"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Respuesta es lista\", function () {",
+              "  pm.expect(pm.response.json()).to.be.an(\"array\");",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "PUT - Actualizar cliente",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "consumerId",
+            "value": "{{consumerId}}"
+          },
+          {
+            "key": "traceparent",
+            "value": "{{traceparent}}"
+          },
+          {
+            "key": "deviceType",
+            "value": "{{deviceType}}"
+          },
+          {
+            "key": "deviceId",
+            "value": "{{deviceId}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellidoPaterno\": \"Perez\",\n  \"apellidoMaterno\": \"Lopez\",\n  \"activo\": false\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/clientes/{{clienteId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "clientes",
+            "{{clienteId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Cliente actualizado inactivo\", function () {",
+              "  pm.expect(pm.response.json().activo).to.eql(false);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
