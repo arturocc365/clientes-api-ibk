@@ -1,0 +1,5 @@
+.venv_pdf/
+target/
+.idea/
+*.pdf
+srctiEOF
